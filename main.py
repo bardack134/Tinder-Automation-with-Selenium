@@ -3,8 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-
-from constants import FACEBOOK_MAIL, FACEBOOK_PASSWORD
+from constants import FACEBOOK_MAIL, FACEBOOK_PASSWORD, PHONE_NUMBER
 
 class TinderBot:
     def __init__(self):
@@ -30,9 +29,9 @@ class TinderBot:
             login_button=self.driver.find_element(By.CSS_SELECTOR, value="a.c1p6lbu0")
             login_button.click()
 
-            #clik in the 'continue using Facebnook'
-            sleep(4)
-            continue_with_facebook=self.driver.find_element(By.CSS_SELECTOR, 'button[aria-label="Log in with Facebook"]')
+            #clik in the 'continue using facebook'
+            sleep(3)
+            continue_with_facebook=self.driver.find_element(By.XPATH, '/html/body/div[2]/div/div/div/div[1]/div/div/div[2]/div[2]/span/div[3]/button')
             continue_with_facebook.click()    
 
 
@@ -40,7 +39,7 @@ class TinderBot:
         except Exception as err:
             
             # print error message if the element was not found
-            print(f"Error occurred while finding sign in element or 'continue using Facebook': {err}")  
+            print(f"Error occurred while finding sign in element or 'continue using Google': {err}")  
             
             
     def cookies(self):
@@ -49,7 +48,7 @@ class TinderBot:
         try:
             
             #5 seconds waiting until the page loads
-            sleep(5)
+            sleep(4)
             
             #We look for the 'I accept' button for cookies.
             cookie=self.driver.find_element(By.XPATH, value='/html/body/div[1]/div/div[2]/div/div/div[1]/div[1]/button')
@@ -65,9 +64,9 @@ class TinderBot:
         """Method that enter on tinder the  provided email and password"""
         
         try:
-            sleep(4)
+            sleep(3)
             
-            #NOTE:switching from the base window to the new window to enter the email and password
+            #NOTE:SWITCHING FROM THE BASE WINDOW TO THE NEW WINDOW TO ENTER THE EMAIL AND PASSWORD
             base_window = self.driver.window_handles[0]
             fb_login_window = self.driver.window_handles[1]
             self.driver.switch_to.window(fb_login_window)
@@ -81,21 +80,71 @@ class TinderBot:
             sign_in_username=self.driver.find_element(By.XPATH, value='/html/body/div/div[2]/div[1]/form/div/div[1]/div/input')
             sign_in_username.send_keys(FACEBOOK_MAIL)
             sign_in_password=self.driver.find_element(By.ID, "pass")
-            sign_in_password.send_keys(FACEBOOK_PASSWORD, Keys.ENTER)    
-             
+            sign_in_password.send_keys(FACEBOOK_PASSWORD, Keys.ENTER)        
+
         except Exception as err:
             
             # Imprimir un mensaje de error si ocurre una excepción
             print(f"Error occurred while entering the username or password: {err}") 
                         
-    def login(self):
+        else: 
+            #Click in the 'yes, continue' to continue after enter the username, password and 'enter'           
+            try: 
+                sleep(5)   
+                
+                continue_button=self.driver.find_element(By.XPATH, value='/html/body/div[3]/div[2]/div/div/div/div/form/div/button')
+                
+    
+            except Exception as err:
+                # If the 'continue' button is not found, do nothing
+                print('Continue button not found. Proceeding without clicking')   
+            
+            else:
+                continue_button.click()
+        
+        sleep(4)    
+        #Switch back to main Tinder window
+        self.driver.switch_to.window(base_window)
+        
+        #printing the window title to verify that is working and we are in the correct window
+        print(self.driver.title)    
+        
+        
+    def enter_phone_number(self):
+        """this method enters the phone number, this method is use after user has login with username and password"""
+        
+        try:
+            
+            #3 seconds waiting until the page loads
+            sleep(4)
+            
+            #We look for the 'I accept' button for cookies.
+            phone_number_input=self.driver.find_element(By.XPATH, value='/html/body/div[2]/div/div/div[1]/div/div[2]/div/div[2]/div/div[2]/input')
+            phone_number_input.send_keys(PHONE_NUMBER)
+            
+            sleep(12)
+            
+            #click button 'next' after enter phone number
+            next_button=self.driver.find_element(By.XPATH, value='/html/body/div[2]/div/div/div[1]/div/div[4]/button')
+            next_button.click()
+            
+        except Exception as err:
+            
+            # print error message if the element was not found
+            print(f"Error occurred while entering the phone number or clicking button next:  {err}")        
+                  
+        sleep(12)
+        
+        
+                                    
+    def run_script(self):
         """Methods that manages the loging process"""
         self.cookies()
         self.web_navegate()
         self.user_name_password()
-             
+        self.enter_phone_number()     
             
             
 tinder_bot=TinderBot()
 
-tinder_bot.login()
+tinder_bot.run_script()
