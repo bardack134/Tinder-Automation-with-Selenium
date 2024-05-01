@@ -67,13 +67,15 @@ class TinderBot:
         try:
             sleep(4)
             
-            #switching from the base window to the new window to enter the email and password
+            #NOTE:switching from the base window to the new window to enter the email and password
             base_window = self.driver.window_handles[0]
             fb_login_window = self.driver.window_handles[1]
             self.driver.switch_to.window(fb_login_window)
             
+            
             #print the driver.title to verify that it's the facebook login window that is currently target
             print(self.driver.title)
+            
             
             #We look for the input boxes to enter the username and passwords
             sign_in_username=self.driver.find_element(By.XPATH, value='/html/body/div/div[2]/div[1]/form/div/div[1]/div/input')
