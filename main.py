@@ -122,18 +122,22 @@ class TinderBot:
             phone_number_input=self.driver.find_element(By.XPATH, value='/html/body/div[2]/div/div/div[1]/div/div[2]/div/div[2]/div/div[2]/input')
             phone_number_input.send_keys(PHONE_NUMBER)
             
-            sleep(12)
+            sleep(2)
             
             #click button 'next' after enter phone number
-            next_button=self.driver.find_element(By.XPATH, value='/html/body/div[2]/div/div/div[1]/div/div[4]/button')
+            next_button=self.driver.find_element(By.XPATH, value='/html/body/div[2]/div/div/div[1]/div/div[3]/button')
             next_button.click()
+            #NOTE: IN THIS PART THEY SEND A CONFIRMATION CODE TO CELLPHONE THAT WE NEED TO ENTER MANUALLY AFTER THAT WAIT FOR THE PROGRAMM CONTINUE
+            sleep(14)
             
+            next_button2=self.driver.find_element(By.XPATH, value='/html/body/div[2]/div/div/div[1]/div/div[4]/button')
+            next_button2.click()
         except Exception as err:
             
             # print error message if the element was not found
             print(f"Error occurred while entering the phone number or clicking button next:  {err}")        
                   
-        sleep(12)
+        
         
         
                                     
